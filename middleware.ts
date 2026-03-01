@@ -2,22 +2,23 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { updateAuthSession } from "@/lib/supabase/middleware";
 
-const AUTH_ROUTES = new Set(["/login", "/signup"]);
+const PUBLIC_ROUTES = new Set(["/login", "/signup"]);
 
 export async function middleware(request: NextRequest) {
   const { user, response } = await updateAuthSession(request);
 
   const pathname = request.nextUrl.pathname;
-  const isAuthRoute = AUTH_ROUTES.has(pathname);
+  const isPublicRoute = PUBLIC_ROUTES.has(pathname);
 
-  if (!user && !isAuthRoute) {
+  if (!user && !isPublicRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (user && isAuthRoute) {
+  // Keep /signup accessible even when already authenticated.
+  if (user && pathname === "/login") {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/";
     redirectUrl.search = "";

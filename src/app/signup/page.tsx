@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/context/auth-context";
 
 export default function SignUpPage() {
-  const { signUp } = useAuth();
+  const { signOut, signUp, user } = useAuth();
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -24,6 +24,11 @@ export default function SignUpPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (user) {
+      toast.error("Sign out first to create a different account.");
+      return;
+    }
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match.");
@@ -53,6 +58,21 @@ export default function SignUpPage() {
           <p className="text-sm text-slate-500">Start syncing your books, notes, and vocabulary across devices.</p>
         </CardHeader>
         <CardContent>
+          {user ? (
+            <div className="mb-4 space-y-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+              <p>You are currently signed in as <strong>{user.email}</strong>.</p>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  await signOut();
+                  toast.success("Signed out. You can create a new account now.");
+                }}
+              >
+                Sign out to create a new account
+              </Button>
+            </div>
+          ) : null}
+
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="signup-email">Email</Label>
