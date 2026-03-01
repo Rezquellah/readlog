@@ -3,8 +3,15 @@ export interface PublicEnv {
   NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
 }
 
+// Next.js client bundles only expose NEXT_PUBLIC env values reliably
+// when accessed via static property names.
+const RAW_PUBLIC_ENV: PublicEnv = {
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+};
+
 function readPublicEnv(name: keyof PublicEnv) {
-  const value = process.env[name];
+  const value = RAW_PUBLIC_ENV[name];
 
   if (value && value.trim()) {
     return value;
