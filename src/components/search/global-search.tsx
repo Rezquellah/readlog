@@ -72,7 +72,7 @@ export function GlobalSearch({ className }: GlobalSearchProps) {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-slate-900">{result.title}</p>
                   <p className="truncate text-xs text-slate-500">
-                    {languageLabel(result.language)} · {result.bookTitle}
+                    {languageLabel(result.language)} - {result.bookTitle}
                   </p>
                   {result.excerpt ? (
                     <p className="mt-0.5 truncate text-xs text-slate-400">{result.excerpt}</p>

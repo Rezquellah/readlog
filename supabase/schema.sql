@@ -175,8 +175,7 @@ create policy "activity_log_days_delete_own" on public.activity_log_days for del
 insert into storage.buckets (id, name, public)
 values ('readlog-covers', 'readlog-covers', true)
 on conflict (id) do update set public = excluded.public;
-
-alter table storage.objects enable row level security;
+-- storage.objects is managed by Supabase and already has RLS enabled.
 
 drop policy if exists "covers_public_read" on storage.objects;
 create policy "covers_public_read"
