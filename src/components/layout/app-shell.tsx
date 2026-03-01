@@ -1,8 +1,8 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { useMemo, useState, type PropsWithChildren } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState, type PropsWithChildren } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
@@ -21,6 +21,7 @@ import { QuickAddModal } from "@/components/quick-add/quick-add-modal";
 import { ReadLogLogo } from "@/components/layout/readlog-logo";
 import { GlobalSearch } from "@/components/search/global-search";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/context/auth-context";
 import { useReadingData } from "@/lib/context/reading-data-context";
 import { cn } from "@/lib/utils";
 
@@ -89,20 +90,39 @@ function NavLink({
 
 export function AppShell({ children }: PropsWithChildren) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const { isLoaded, isPersisting } = useReadingData();
   const [isAddBookOpen, setIsAddBookOpen] = useState(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
-  const isAuthRoute = pathname === "/login" || pathname === "/signup";
+  const isAuthRoute = pathname === "/auth" || pathname === "/login" || pathname === "/signup";
 
   const activeLabel = useMemo(
     () => NAV_ITEMS.find((item) => (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)))?.label ?? "ReadLog",
     [pathname],
   );
 
+  useEffect(() => {
+    if (isAuthRoute || isAuthLoading || user) {
+      return;
+    }
+
+    router.replace("/auth");
+  }, [isAuthLoading, isAuthRoute, router, user]);
+
   if (isAuthRoute) {
     return (
       <div className="min-h-screen bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.18),transparent_45%),radial-gradient(circle_at_100%_100%,rgba(34,197,94,0.16),transparent_38%),linear-gradient(180deg,#f7fafc_0%,#f8fafc_52%,#eef2ff_100%)]">
         {children}
+      </div>
+    );
+  }
+
+  if (isAuthLoading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.18),transparent_45%),radial-gradient(circle_at_100%_100%,rgba(34,197,94,0.16),transparent_38%),linear-gradient(180deg,#f7fafc_0%,#f8fafc_52%,#eef2ff_100%)] px-4 text-sm text-slate-600">
+        <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
+        Redirecting to authentication...
       </div>
     );
   }
