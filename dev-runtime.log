@@ -1,0 +1,21 @@
+
+> readblog@0.1.0 dev
+> next dev --webpack --port 3020
+
+  next-swc build: wasm build @next/swc-wasm-nodejs
+⚠ Attempted to load @next/swc-win32-x64-msvc, but an error occurred: \\?\C:\Users\momed\OneDrive\Documents\vibecode\ReadBlog\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node is not a valid Win32 application.
+\\?\C:\Users\momed\OneDrive\Documents\vibecode\ReadBlog\node_modules\@next\swc-win32-x64-msvc\next-swc.win32-x64-msvc.node
+▲ Next.js 16.1.6 (webpack)
+- Local:         http://localhost:3020
+- Network:       http://192.168.182.1:3020
+- Environments: .env.local
+
+✓ Starting...
+  Skipping creating a lockfile at C:\Users\momed\OneDrive\Documents\vibecode\ReadBlog\.next\dev\lock because we're using WASM bindings
+✓ Ready in 2.1s
+ GET / 200 in 2.0s (compile: 1708ms, render: 322ms)
+ GET /login 200 in 1357ms (compile: 1126ms, render: 231ms)
+ GET /library/en 200 in 3.7s (compile: 3.5s, render: 197ms)
+ GET / 200 in 78ms (compile: 19ms, render: 59ms)
+
+C:\Users\momed\OneDrive\Documents\vibecode\ReadBlog>
